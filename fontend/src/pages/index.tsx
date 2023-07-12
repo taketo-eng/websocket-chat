@@ -4,6 +4,8 @@ import { SystemMessageItem } from "@/components/SystemMessageItem"
 import { Message } from "@/types/Message"
 import { ChangeEvent, FormEvent, useEffect, useRef, useState } from "react"
 
+const wsUrl = "ws://localhost:8000/ws/"
+
 export default function Home() {
     const [userName, setUserName] = useState<string>("")
     const [message, setMessage] = useState<string>("")
@@ -14,7 +16,7 @@ export default function Home() {
         const name = window.prompt("Enter your name") as string
         setUserName(name)
 
-        socketRef.current = new WebSocket("ws://localhost:8000/ws/")
+        socketRef.current = new WebSocket(wsUrl)
         socketRef.current.onopen = () => {
             console.log("connected")
 
@@ -27,8 +29,11 @@ export default function Home() {
 
         socketRef.current.onmessage = (e) => {
             const data = JSON.parse(e.data)
-            //console.log(messages)
             setMessages((prevData) => [...prevData, data])
+        }
+
+        socketRef.current.onclose = () => {
+            socketRef.current = new WebSocket(wsUrl)
         }
 
         return () => {
