@@ -51,7 +51,7 @@ export default function Home() {
 
     const sendMessage = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-        if (!socketRef.current) return
+        if (!socketRef.current || !message) return
         setMessage("")
         socketRef.current.send(
             JSON.stringify({
@@ -86,7 +86,11 @@ export default function Home() {
                             type="text"
                             value={message}
                         />
-                        <input className="bg-emerald-600 text-white border border-black px-2 md:px-8 hover:opacity-80 transition-opacity cursor-pointer" type="submit" />
+                        <input
+                            disabled={!message}
+                            className={`${message ? "bg-emerald-600 hover:opacity-80 transition-opacity" : "bg-gray-500"} text-white border border-black px-2 md:px-8 cursor-pointer`}
+                            type="submit"
+                        />
                     </form>
                 </div>
             </div>
