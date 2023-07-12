@@ -57,7 +57,7 @@ async def websocket_endpoint(websocket: WebSocket, client_name: str):
             data = json.loads(json_data)
             if data['messageType'] == 'system':
                 await manager.send_personal_message(data, websocket)
-                await manager.broadcast(data)
+                await manager.broadcast(data, websocket)
             else:
                 await manager.send_personal_message(data, websocket, client_name)
                 await manager.broadcast(data, websocket, client_name)

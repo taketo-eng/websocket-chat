@@ -5,22 +5,21 @@ import { Message } from "@/types/Message"
 import { ChangeEvent, FormEvent, useEffect, useState } from "react"
 
 let socket: WebSocket
+let userName: string
 
 export default function Home() {
-    const [userName, setUserName] = useState<string>("")
     const [message, setMessage] = useState<string>("")
     const [messages, setMessages] = useState<Message[]>([])
 
     useEffect(() => {
-        const name = window.prompt("Enter your name") as string
-        setUserName(name)
+        userName = window.prompt("Enter your name") as string
 
-        socket = new WebSocket((process.env.NEXT_PUBLIC_END_POINT as string) + "/" + name)
+        socket = new WebSocket((process.env.NEXT_PUBLIC_END_POINT as string) + "/" + userName)
         socket.onopen = () => {
             console.log("connected")
             socket.send(
                 JSON.stringify({
-                    message: `${name} enter room!`,
+                    message: `${userName} enter room!`,
                     sendTime: new Date(),
                     messageType: "system",
                 })
