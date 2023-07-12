@@ -1,7 +1,6 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, WebSocket
 from fastapi.middleware.cors import CORSMiddleware
-
-from router import websocket
+import json
 
 app = FastAPI()
 
@@ -18,5 +17,16 @@ app.add_middleware(
     allow_headers=['*']
 )
 
-
-app.include_router(websocket.router)
+@app.websocket('/ws')
+async def websocket_endpoint(websocket: WebSocket):
+    await websocket.accept()
+    while True:
+        try:
+            json_data = await websocket.receive_text()
+            data = json.loads(json_data)
+            print(data)
+            await websocket.send_json(data)
+        except Exception as e:
+            print('error', e)
+            break
+    print('Bye Bye')
