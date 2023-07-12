@@ -15,13 +15,14 @@ export default function Home() {
         const name = window.prompt("Enter your name") as string
         setUserName(name)
 
-        socket = new WebSocket(process.env.NEXT_PUBLIC_END_POINT as string)
+        socket = new WebSocket((process.env.NEXT_PUBLIC_END_POINT as string) + "/" + name)
         socket.onopen = () => {
             console.log("connected")
             socket.send(
                 JSON.stringify({
                     message: `${name} enter room!`,
                     sendTime: new Date(),
+                    messageType: "system",
                 })
             )
         }
@@ -32,7 +33,7 @@ export default function Home() {
         }
 
         socket.onclose = () => {
-            socket = new WebSocket(process.env.NEXT_PUBLIC_END_POINT as string)
+            socket = new WebSocket((process.env.NEXT_PUBLIC_END_POINT as string) + "/" + userName)
         }
 
         return () => {
@@ -53,9 +54,9 @@ export default function Home() {
         setMessage("")
         socket.send(
             JSON.stringify({
-                name: userName,
                 message,
                 sendTime: new Date(),
+                messageType: "message",
             })
         )
     }

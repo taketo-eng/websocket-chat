@@ -4,7 +4,7 @@ import React, { FC } from "react"
 
 type Props = {
     isMine: boolean
-} & Message
+} & Omit<Message, "messageType">
 
 export const MessageItem: FC<Props> = ({ name, message, sendTime, isMine }) => {
     return (
