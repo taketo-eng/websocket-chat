@@ -6,7 +6,8 @@ from router import websocket
 app = FastAPI()
 
 origins = [
-    'http://localhost:3000'
+    'http://localhost:3000',
+    'https://websocket-chat-two.vercel.app/'
 ]
 
 app.add_middleware(
