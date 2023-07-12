@@ -4,7 +4,6 @@ import { SystemMessageItem } from "@/components/SystemMessageItem"
 import { Message } from "@/types/Message"
 import { ChangeEvent, FormEvent, useEffect, useState } from "react"
 
-const wsUrl = "ws://localhost:8000/ws/"
 let socket: WebSocket
 
 export default function Home() {
@@ -16,7 +15,7 @@ export default function Home() {
         const name = window.prompt("Enter your name") as string
         setUserName(name)
 
-        socket = new WebSocket(wsUrl)
+        socket = new WebSocket(process.env.NEXT_PUBLIC_END_POINT as string)
         socket.onopen = () => {
             console.log("connected")
             socket.send(
@@ -33,7 +32,7 @@ export default function Home() {
         }
 
         socket.onclose = () => {
-            socket = new WebSocket(wsUrl)
+            socket = new WebSocket(process.env.NEXT_PUBLIC_END_POINT as string)
         }
 
         return () => {
