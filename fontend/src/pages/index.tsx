@@ -2,45 +2,44 @@ import { Layout } from "@/components/Layout"
 import { MessageItem } from "@/components/MessageItem"
 import { SystemMessageItem } from "@/components/SystemMessageItem"
 import { Message } from "@/types/Message"
-import { ChangeEvent, FormEvent, useEffect, useRef, useState } from "react"
+import { ChangeEvent, FormEvent, useEffect, useState } from "react"
 
 const wsUrl = "ws://localhost:8000/ws/"
+let socket: WebSocket
 
 export default function Home() {
     const [userName, setUserName] = useState<string>("")
     const [message, setMessage] = useState<string>("")
     const [messages, setMessages] = useState<Message[]>([])
-    const socketRef = useRef<WebSocket>()
 
     useEffect(() => {
         const name = window.prompt("Enter your name") as string
         setUserName(name)
 
-        socketRef.current = new WebSocket(wsUrl)
-        socketRef.current.onopen = () => {
+        socket = new WebSocket(wsUrl)
+        socket.onopen = () => {
             console.log("connected")
-            if (socketRef.current) {
-                socketRef.current.send(
-                    JSON.stringify({
-                        message: `${name} enter room!`,
-                    })
-                )
-            }
+            socket.send(
+                JSON.stringify({
+                    message: `${name} enter room!`,
+                    sendTime: new Date(),
+                })
+            )
         }
 
-        socketRef.current.onmessage = (e) => {
+        socket.onmessage = (e) => {
             const data = JSON.parse(e.data)
-            setMessages((prevData) => [...prevData, data])
+            setMessages((prevData) => [...prevData, { ...data, sendTime: new Date(data.sendTime) }])
         }
 
-        socketRef.current.onclose = () => {
-            socketRef.current = new WebSocket(wsUrl)
+        socket.onclose = () => {
+            socket = new WebSocket(wsUrl)
         }
 
         return () => {
-            if (!socketRef.current) return
+            if (!socket) return
 
-            socketRef.current.close()
+            socket.close()
         }
     }, [])
 
@@ -51,12 +50,13 @@ export default function Home() {
 
     const sendMessage = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-        if (!socketRef.current || !message) return
+        if (!socket || !message) return
         setMessage("")
-        socketRef.current.send(
+        socket.send(
             JSON.stringify({
                 name: userName,
                 message,
+                sendTime: new Date(),
             })
         )
     }
@@ -69,9 +69,9 @@ export default function Home() {
                         {messages &&
                             messages.map((msgItem, i) => {
                                 if (msgItem.name) {
-                                    return <MessageItem key={i} name={msgItem.name} message={msgItem.message} isMine={msgItem.name == userName} />
+                                    return <MessageItem key={i} name={msgItem.name} sendTime={msgItem.sendTime} message={msgItem.message} isMine={msgItem.name == userName} />
                                 } else {
-                                    return <SystemMessageItem key={i} message={msgItem.message} />
+                                    return <SystemMessageItem key={i} message={msgItem.message} sendTime={msgItem.sendTime} />
                                 }
                             })}
                     </ul>
