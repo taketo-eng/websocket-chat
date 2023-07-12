@@ -19,12 +19,13 @@ export default function Home() {
         socketRef.current = new WebSocket(wsUrl)
         socketRef.current.onopen = () => {
             console.log("connected")
-
-            socketRef.current?.send(
-                JSON.stringify({
-                    message: `${name} enter room!`,
-                })
-            )
+            if (socketRef.current) {
+                socketRef.current.send(
+                    JSON.stringify({
+                        message: `${name} enter room!`,
+                    })
+                )
+            }
         }
 
         socketRef.current.onmessage = (e) => {
@@ -43,6 +44,11 @@ export default function Home() {
         }
     }, [])
 
+    useEffect(() => {
+        const scrollInner = document.querySelector(".message_wrapper") as Element
+        scrollInner.scrollTop = scrollInner?.scrollHeight
+    }, [messages])
+
     const sendMessage = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         if (!socketRef.current) return
@@ -59,7 +65,7 @@ export default function Home() {
         <Layout>
             <div className="flex w-full h-full">
                 <div className="w-md max-w-base bg-white rounded-lg mx-auto p-3 md:p-8">
-                    <ul className="overflow-y-auto h-full flex flex-col gap-3 md:gap-5">
+                    <ul className="overflow-y-auto h-full flex flex-col gap-3 md:gap-5 message_wrapper">
                         {messages &&
                             messages.map((msgItem, i) => {
                                 if (msgItem.name) {
