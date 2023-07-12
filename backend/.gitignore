@@ -1,3 +1,4 @@
 websocket-chat-venv
 .idea
 __pycache__
+.vercel

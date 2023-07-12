@@ -1,1 +1,3 @@
-fastapi[all]==0.100.0
+fastapi
+uvicorn
+websockets
