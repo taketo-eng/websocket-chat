@@ -6,3 +6,7 @@ TypeScript, Python
   
 ## フレームワーク
 Next.js, FastAPI  
+
+## インフラ系
+Next.js：Vercel  
+FastAPI：GCPのCloud Run
