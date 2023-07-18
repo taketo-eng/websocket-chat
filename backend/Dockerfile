@@ -10,4 +10,8 @@ ENV PYTHONUNBUFFERED True
 
 WORKDIR /app
 COPY main.py .
+COPY .env .
+COPY config/ ./config/
+COPY router/ ./router/
+COPY utils/ ./utils/
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080"]
