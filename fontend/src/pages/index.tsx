@@ -1,7 +1,7 @@
 import { Layout } from "@/components/Layout"
 import { MessageItem } from "@/components/MessageItem"
 import { SystemMessageItem } from "@/components/SystemMessageItem"
-import { Message } from "@/types/Message"
+import { Message, MessageLangageSetting } from "@/types/Message"
 import { ChangeEvent, FormEvent, useEffect, useState } from "react"
 
 let socket: WebSocket
@@ -9,7 +9,8 @@ let userName: string
 
 export default function Home() {
     const [message, setMessage] = useState<string>("")
-    const [messages, setMessages] = useState<Message[]>([])
+    const [messages, setMessages] = useState<Array<Message & MessageLangageSetting>>([])
+    const [languageSettings, setLanguageSettings] = useState<MessageLangageSetting>({ toLang: "Japanese", isTranslate: true })
 
     useEffect(() => {
         userName = window.prompt("Enter your name") as string
@@ -22,6 +23,8 @@ export default function Home() {
                     message: `${userName} enter room!`,
                     sendTime: new Date(),
                     messageType: "system",
+                    isTranslate: languageSettings.isTranslate,
+                    toLang: languageSettings.toLang,
                 })
             )
         }
@@ -56,6 +59,8 @@ export default function Home() {
                 message,
                 sendTime: new Date(),
                 messageType: "message",
+                isTranslate: languageSettings.isTranslate,
+                toLang: languageSettings.toLang,
             })
         )
     }
