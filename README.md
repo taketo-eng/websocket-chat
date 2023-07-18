@@ -9,4 +9,8 @@ Next.js, FastAPI
 
 ## インフラ系
 Next.js：Vercel  
-FastAPI：GCPのCloud Run
+FastAPI：GCPのCloud Run  
+
+# 今後追加する機能
+ユーザー認証  
+ChatGPTによる自動翻訳
