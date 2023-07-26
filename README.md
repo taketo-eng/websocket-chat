@@ -1,5 +1,5 @@
 # websocket-chat
-websocketの練習でチャットアプリを開発  
+ChatGPTによる自動翻訳チャットアプリ
 
 ## 言語
 TypeScript, Python  
@@ -16,4 +16,4 @@ ChatGPTによる自動翻訳（今のところ日本語以外の言語から日�
 
 ## 今後追加する機能
 ユーザー認証  
-ChatGPTによる自動翻訳の言語設定
+自動翻訳の言語設定ができるように
